@@ -65,4 +65,24 @@ class Usuario
         $stmt->execute();
         $stmt->close();
     }
+
+    /**
+     * La función "obtenerUsuario" recupera un usuario de la base de datos en función de su nombre de
+     * usuario.
+     * 
+     * @param nombreUsuario El parámetro "nombreUsuario" es el nombre de usuario del usuario que desea
+     * recuperar de la base de datos.
+     * 
+     * @return una matriz asociativa que contiene los datos del usuario con el nombre de usuario
+     * especificado.
+     */
+    public function obtenerUsuario($nombreUsuario) {
+        $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE nombreUsuario = ?");
+        $stmt->bind_param("s", $nombreUsuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $stmt->close();
+
+        return $resultado->fetch_assoc();
+    }
 }
