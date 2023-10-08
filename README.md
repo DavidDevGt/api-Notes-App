@@ -23,7 +23,3 @@ La API utiliza JWT para autenticar las solicitudes. Los tokens deben ser proporc
 ## Contribuir
 
 Para contribuir al proyecto, por favor crea una Pull Request con los cambios propuestos.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
