@@ -1,19 +1,38 @@
 <?php
-require_once('../config/db.php');
+namespace MiProyecto\Models;
 
 class Usuario
 {
     private $conexion;
 
-    public function __construct()
+    // Esta se usa para testing
+    public function __construct($conexion = null)
     {
-        $this->conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        if ($this->conexion->connect_error) {
-            die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
+        // Si no se proporciona una conexión, se crea una, útil para el entorno de producción
+        if($conexion === null) {
+            require_once(__DIR__ . '/../config/db.php');
+            $this->conexion = new \mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            if ($this->conexion->connect_error) {
+                die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
+            }
+            $this->conexion->set_charset("utf8");
+        } else {
+            // Si se proporciona una conexión, la usamos
+            $this->conexion = $conexion;
         }
-
-        $this->conexion->set_charset("utf8");
     }
+
+    // Descomentar para producción
+
+    // public function __construct()
+    // {
+    //     $this->conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    //     if ($this->conexion->connect_error) {
+    //         die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
+    //     }
+
+    //     $this->conexion->set_charset("utf8");
+    // }
 
     public function __destruct()
     {

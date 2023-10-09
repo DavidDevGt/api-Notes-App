@@ -19,9 +19,11 @@ class ComposerStaticInit48318ab36a580be9e1c12fea86d56383
         'M' => 
         array (
             'MiProyecto\\Utils\\' => 17,
+            'MiProyecto\\Tests\\' => 17,
             'MiProyecto\\Models\\' => 18,
             'MiProyecto\\Middleware\\' => 22,
             'MiProyecto\\Controllers\\' => 23,
+            'MiProyecto\\' => 11,
         ),
         'D' => 
         array (
@@ -38,6 +40,10 @@ class ComposerStaticInit48318ab36a580be9e1c12fea86d56383
         array (
             0 => __DIR__ . '/../..' . '/utils',
         ),
+        'MiProyecto\\Tests\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/tests',
+        ),
         'MiProyecto\\Models\\' => 
         array (
             0 => __DIR__ . '/../..' . '/models',
@@ -49,6 +55,10 @@ class ComposerStaticInit48318ab36a580be9e1c12fea86d56383
         'MiProyecto\\Controllers\\' => 
         array (
             0 => __DIR__ . '/../..' . '/controllers',
+        ),
+        'MiProyecto\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'DeepCopy\\' => 
         array (

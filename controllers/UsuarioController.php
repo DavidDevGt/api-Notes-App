@@ -1,5 +1,7 @@
 <?php
-require_once('../models/Usuario.php');
+namespace MiProyecto\Controllers;
+
+use MiProyecto\Models\Usuario;
 
 class UsuarioController
 {
@@ -12,7 +14,7 @@ class UsuarioController
     }
 
     // Descomentar para producción
-    
+
     // public function __construct()
     // {
     //     $this->usuarioModel = new Usuario();
