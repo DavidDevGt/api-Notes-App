@@ -1,7 +1,9 @@
 <?php
-require_once('controllers/NotaController.php');
-require_once('controllers/UsuarioController.php');
-require_once('middleware/AuthMiddleware.php');
+require_once __DIR__ . '/vendor/autoload.php';
+
+use MiProyecto\Controllers\NotaController;
+use MiProyecto\Controllers\UsuarioController;
+use MiProyecto\Middleware\AuthMiddleware;
 
 // Aqui miras el metodo y la ruta para saber que controlador y metodo ejecutar.
 $request_method = $_SERVER['REQUEST_METHOD'];

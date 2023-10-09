@@ -1,6 +1,16 @@
 <?php
+namespace MiProyecto\Utils;
+
 class JwtHandler {
-    private static $secret = 'tu_clave_secreta';
+    private $secret;
+
+    public function __construct($secret)
+    {
+        if (!$secret) {
+            throw new InvalidArgumentException('Secret no puede estar vacío');
+        }
+        $this->secret = $secret;
+    }
 
     /**
      * La función codifica una carga útil en un token web JSON (JWT) utilizando el algoritmo HS256.
