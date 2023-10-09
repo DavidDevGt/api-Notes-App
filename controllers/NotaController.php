@@ -86,7 +86,7 @@ class NotaController
         }
 
         // Verificamos que el título y el contenido cumplan con la longitud mínima y máxima definida.
-        if (strlen($datosNota['titulo']) < 3 || strlen($datosNota['titulo']) > 100 || strlen($datosNota['contenido']) < 10) {
+        if (strlen($datosNota['titulo']) < 7 || strlen($datosNota['titulo']) > 60 || strlen($datosNota['contenido']) < 10) {
             return false;
         }
 
