@@ -11,17 +11,26 @@ class NotaController
     }
 
     /**
-     * La función crea una nueva nota con un título, contenido e ID de usuario determinados.
+     * La función crea una nueva nota con un título, contenido e ID de usuario determinados y devuelve
+     * un mensaje de éxito.
      * 
-     * @param titulo El parámetro "titulo" representa el título de la nota.
+     * @param titulo El título de la nota.
      * @param contenido El parámetro "contenido" representa el contenido o cuerpo de la nota. Es el
-     * texto o información que se almacenará en la nota.
+     * texto o información principal que contiene la nota.
      * @param idUsuario El parámetro "idUsuario" representa el ID del usuario que está creando la nota.
+     * Se utiliza para asociar la nota con el usuario en la base de datos.
      * 
-     * @return una cadena codificada en JSON que contiene el estado y el mensaje de la operación.
+     * @return una cadena codificada en JSON. La cadena contiene un estado y un mensaje que indica el
+     * éxito o el fracaso de la creación de una nota.
      */
     public function crear($titulo, $contenido, $idUsuario)
     {
+        // Validamos los datos de la nota antes de intentar crearla.
+        if (!$this->validarDatosNota(['titulo' => $titulo, 'contenido' => $contenido])) {
+            return json_encode(['status' => 'error', 'message' => 'Datos de nota inválidos.']);
+        }
+
+        // Creamos la nota y devolvemos un mensaje de éxito.
         $this->notaModel->crearNuevaNota($titulo, $contenido, $idUsuario);
         return json_encode(['status' => 'success', 'message' => 'Nota creada con éxito.']);
     }
@@ -83,9 +92,7 @@ class NotaController
         // Verificamos que los datos de la nota no estén vacíos.
         if (empty($datosNota['titulo']) || empty($datosNota['contenido'])) {
             return false;
-        }
-
-        // Verificamos que el título y el contenido cumplan con la longitud mínima y máxima definida.
+        } // Caracteres minimos van AQUI
         if (strlen($datosNota['titulo']) < 7 || strlen($datosNota['titulo']) > 60 || strlen($datosNota['contenido']) < 10) {
             return false;
         }
