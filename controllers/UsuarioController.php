@@ -10,25 +10,32 @@ class UsuarioController
         $this->usuarioModel = new Usuario();
     }
 
+
     /**
-     * La función "crear" crea un nuevo usuario con un nombre de usuario y contraseña determinados, y
-     * devuelve una respuesta JSON indicando éxito o fracaso.
+     * La función "crear" crea un nuevo usuario con un nombre de usuario y contraseña determinados,
+     * valida los datos proporcionados por el usuario, verifica si el nombre de usuario ya está en uso
+     * y devuelve una respuesta codificada en JSON indicando el estado y mensaje de la operación.
      * 
      * @param nombreUsuario El parámetro "nombreUsuario" representa el nombre de usuario del usuario
      * que se está creando.
      * @param contrasena El parámetro "contrasena" representa la contraseña del usuario.
      * 
      * @return una cadena codificada en JSON. La cadena contiene un estado y un mensaje que indica el
-     * resultado de la operación. Si la operación es exitosa, el estado será 'éxito' y el mensaje será
-     * 'Usuario creado con éxito'. Si la operación no tiene éxito, el estado será 'error' y el mensaje
-     * será 'Datos de usuario inválidos'.
+     * resultado de la operación.
      */
     public function crear($nombreUsuario, $contrasena)
     {
+        // Validamos los datos proporcionados por el usuario.
         if (!$this->validarDatos($nombreUsuario, $contrasena)) {
             return json_encode(['status' => 'error', 'message' => 'Datos de usuario inválidos.']);
         }
 
+        // Verificamos que el nombre de usuario no esté ya en uso.
+        if ($this->usuarioModel->obtenerUsuario($nombreUsuario)) {
+            return json_encode(['status' => 'error', 'message' => 'El nombre de usuario ya está en uso.']);
+        }
+
+        // Creamos el nuevo usuario y devolvemos un mensaje de éxito.
         $this->usuarioModel->crearNuevoUsuario($nombreUsuario, $contrasena);
         return json_encode(['status' => 'success', 'message' => 'Usuario creado con éxito.']);
     }
@@ -90,12 +97,12 @@ class UsuarioController
     }
 
     /**
-     * La función "login" verifica las credenciales del usuario y, si son válidas, genera un token JWT.
+     * La función "login" valida las credenciales del usuario y, si son válidas, genera un token JWT.
      * 
-     * @param nombreUsuario El parámetro "nombreUsuario" representa el nombre de usuario del usuario que intenta iniciar sesión.
-     * @param contrasena El parámetro "contrasena" representa la contraseña del usuario que intenta iniciar sesión.
+     * @param nombreUsuario El parámetro "nombreUsuario" es el nombre de usuario del usuario que intenta iniciar sesión.
+     * @param contrasena El parámetro "contrasena" es la contraseña del usuario que intenta iniciar sesión.
      * 
-     * @return una cadena codificada en JSON que contiene el estado de la operación y un token JWT si las credenciales son válidas.
+     * @return una cadena codificada en JSON que contiene el estado de la operación y, si las credenciales son válidas, un token JWT.
      */
     public function login($nombreUsuario, $contrasena)
     {
@@ -104,11 +111,13 @@ class UsuarioController
             return json_encode(['status' => 'error', 'message' => 'Datos de usuario inválidos.']);
         }
 
-        // Verificamos las credenciales del usuario.
-        $usuario = $this->usuarioModel->obtenerUsuarioPorCredenciales($nombreUsuario, $contrasena);
-        if ($usuario) {
+        // Obtenemos los datos del usuario.
+        $usuario = $this->usuarioModel->obtenerUsuario($nombreUsuario);
+
+        // Verificamos que el usuario exista y la contraseña sea correcta.
+        if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
             // Si las credenciales son válidas, generamos un token JWT.
-            $token = JwtHandler::encode(['id' => $usuario->id, 'nombreUsuario' => $usuario->nombreUsuario]);
+            $token = JwtHandler::encode(['id' => $usuario['id'], 'nombreUsuario' => $usuario['nombreUsuario']]);
             return json_encode(['status' => 'success', 'token' => $token]);
         } else {
             // Si las credenciales no son válidas, devolvemos un mensaje de error.
