@@ -11,8 +11,15 @@ class Usuario
         if ($this->conexion->connect_error) {
             die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
         }
+
+        $this->conexion->set_charset("utf8");
     }
 
+    public function __destruct()
+    {
+        // Cerrar la conexión al destruir la instancia de la clase.
+        $this->conexion->close();
+    }
 
     /**
      * La función "crearNuevoUsuario" crea un nuevo usuario en una base de datos con una contraseña
@@ -80,6 +87,24 @@ class Usuario
         $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE nombreUsuario = ?");
         $stmt->bind_param("s", $nombreUsuario);
         $stmt->execute();
+        $resultado = $stmt->get_result();
+        $stmt->close();
+
+        return $resultado->fetch_assoc();
+    }
+
+    /**
+     * La función "obtenerUsuarioPorId" recupera un usuario de la base de datos en función de su ID.
+     * 
+     * @param id El parámetro "id" es el ID del usuario que desea recuperar de la base de datos.
+     * 
+     * @return una matriz asociativa que contiene los datos del usuario con el ID especificado.
+     */
+    public function obtenerUsuarioPorId($id) {
+        $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE id = ? AND activo = 1");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
         $resultado = $stmt->get_result();
         $stmt->close();
 
