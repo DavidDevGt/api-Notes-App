@@ -4,6 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use MiProyecto\Controllers\NotaController;
 use MiProyecto\Controllers\UsuarioController;
 use MiProyecto\Middleware\AuthMiddleware;
+use MiProyecto\Utils\JwtHandler;
 
 // Aqui miras el metodo y la ruta para saber que controlador y metodo ejecutar.
 $request_method = $_SERVER['REQUEST_METHOD'];
@@ -12,6 +13,7 @@ $path_info = $_SERVER['PATH_INFO'] ?? '';
 // Vamos a usar estos controladores para manejar las operaciones de la API.
 $notaController = new NotaController();
 $usuarioController = new UsuarioController();
+$authMiddleware = new AuthMiddleware($jwtHandler);
 
 switch ($path_info) {
 
@@ -19,7 +21,7 @@ switch ($path_info) {
     case '/nota/crear':
         if ($request_method == 'POST') {
             $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-            $usuario = AuthMiddleware::verificarToken($token);
+            $usuario = $authMiddleware->verificarToken($token);
             if ($usuario) {
                 $titulo = $_POST['titulo'] ?? '';
                 $contenido = $_POST['contenido'] ?? '';
@@ -33,7 +35,7 @@ switch ($path_info) {
     case '/nota/leer':
         if ($request_method == 'GET') {
             $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-            $usuario = AuthMiddleware::verificarToken($token);
+            $usuario = $authMiddleware->verificarToken($token);
             if ($usuario) {
                 $idNota = $_GET['idNota'] ?? '';
                 echo $notaController->leer($idNota);
@@ -45,7 +47,7 @@ switch ($path_info) {
     case '/nota/actualizar':
         if ($request_method == 'POST') {
             $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-            $usuario = AuthMiddleware::verificarToken($token);
+            $usuario = $authMiddleware->verificarToken($token);
             if ($usuario) {
                 $idNota = $_POST['idNota'] ?? '';
                 $nuevoTitulo = $_POST['nuevoTitulo'] ?? '';
@@ -59,7 +61,7 @@ switch ($path_info) {
     case '/nota/eliminar':
         if ($request_method == 'DELETE') {
             $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-            $usuario = AuthMiddleware::verificarToken($token);
+            $usuario = $authMiddleware->verificarToken($token);
             if ($usuario) {
                 $idNota = $_GET['idNota'] ?? '';
                 echo $notaController->eliminar($idNota);

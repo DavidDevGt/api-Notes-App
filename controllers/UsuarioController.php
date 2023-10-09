@@ -107,31 +107,45 @@ class UsuarioController
     }
 
     /**
-     * La función "login" valida las credenciales del usuario y, si son válidas, genera un token JWT.
+     * La función de inicio de sesión en PHP valida las credenciales del usuario, recupera datos del
+     * usuario de la base de datos y genera un token JWT si las credenciales son válidas.
      * 
-     * @param nombreUsuario El parámetro "nombreUsuario" es el nombre de usuario del usuario que intenta iniciar sesión.
-     * @param contrasena El parámetro "contrasena" es la contraseña del usuario que intenta iniciar sesión.
+     * @param nombreUsuario El parámetro "nombreUsuario" representa el nombre de usuario del usuario
+     * que intenta iniciar sesión.
+     * @param contrasena El parámetro "contrasena" representa la contraseña del usuario que intenta
+     * iniciar sesión.
      * 
-     * @return una cadena codificada en JSON que contiene el estado de la operación y, si las credenciales son válidas, un token JWT.
+     * @return una cadena codificada en JSON. El contenido de la cadena depende de las condiciones
+     * dentro de la función. Si la validación de datos falla, devuelve un mensaje de error que indica
+     * datos de usuario no válidos. Si las credenciales del usuario son correctas, devuelve un mensaje
+     * de éxito junto con un token web JSON (JWT). Si las credenciales del usuario son incorrectas,
+     * devuelve un mensaje de error indicando un nombre de usuario o contraseña incorrectos. Si hay un
      */
     public function login($nombreUsuario, $contrasena)
     {
         // Validamos los datos del usuario.
         if (!$this->validarDatos($nombreUsuario, $contrasena)) {
-            return json_encode(['status' => 'error', 'message' => 'Datos de usuario inválidos.']);
+            // Datos de usuario inválidos.
+            return json_encode(['status' => 'error', 'message' => 'Datos de usuario inválidos.'], JSON_UNESCAPED_UNICODE);
         }
-
-        // Obtenemos los datos del usuario.
-        $usuario = $this->usuarioModel->obtenerUsuario($nombreUsuario);
-
-        // Verificamos que el usuario exista y la contraseña sea correcta.
-        if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
-            // Si las credenciales son válidas, generamos un token JWT.
-            $token = JwtHandler::encode(['id' => $usuario['id'], 'nombreUsuario' => $usuario['nombreUsuario']]);
-            return json_encode(['status' => 'success', 'token' => $token]);
-        } else {
-            // Si las credenciales no son válidas, devolvemos un mensaje de error.
-            return json_encode(['status' => 'error', 'message' => 'Nombre de usuario o contraseña incorrectos.']);
+    
+        try {
+            // Obtenemos los datos del usuario desde la base de datos.
+            $usuario = $this->usuarioModel->obtenerUsuario($nombreUsuario);
+    
+            if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
+                // Credenciales válidas, generamos un token JWT.
+                $token = JwtHandler::encode(['id' => $usuario['id'], 'nombreUsuario' => $usuario['nombreUsuario']]);
+    
+                // Devolvemos una respuesta con éxito y el token.
+                return json_encode(['status' => 'success', 'token' => $token], JSON_UNESCAPED_UNICODE);
+            } else {
+                // Credenciales incorrectas.
+                return json_encode(['status' => 'error', 'message' => 'Nombre de usuario o contraseña incorrectos.'], JSON_UNESCAPED_UNICODE);
+            }
+        } catch (Exception $e) {
+            // Error de base de datos.
+            return json_encode(['status' => 'error', 'message' => 'Error de base de datos.'], JSON_UNESCAPED_UNICODE);
         }
     }
 
