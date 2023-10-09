@@ -1,10 +1,12 @@
 <?php
 require_once('../models/Nota.php');
 
-class NotaController {
+class NotaController
+{
     private $notaModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->notaModel = new Nota();
     }
 
@@ -18,7 +20,8 @@ class NotaController {
      * 
      * @return una cadena codificada en JSON que contiene el estado y el mensaje de la operación.
      */
-    public function crear($titulo, $contenido, $idUsuario) {
+    public function crear($titulo, $contenido, $idUsuario)
+    {
         $this->notaModel->crearNuevaNota($titulo, $contenido, $idUsuario);
         return json_encode(['status' => 'success', 'message' => 'Nota creada con éxito.']);
     }
@@ -34,9 +37,10 @@ class NotaController {
      * los datos de la nota. Si no se encuentra la nota, devuelve un estado de error y un mensaje
      * indicando que no se encontró la nota.
      */
-    public function leer($idNota) {
+    public function leer($idNota)
+    {
         $nota = $this->notaModel->leerNota($idNota);
-        if($nota) {
+        if ($nota) {
             return json_encode(['status' => 'success', 'nota' => $nota]);
         } else {
             return json_encode(['status' => 'error', 'message' => 'Nota no encontrada.']);
@@ -54,7 +58,8 @@ class NotaController {
      * 
      * @return una cadena codificada en JSON que contiene el estado y el mensaje de la operación.
      */
-    public function actualizar($idNota, $nuevoTitulo, $nuevoContenido) {
+    public function actualizar($idNota, $nuevoTitulo, $nuevoContenido)
+    {
         $this->notaModel->actualizarNota($idNota, $nuevoTitulo, $nuevoContenido);
         return json_encode(['status' => 'success', 'message' => 'Nota actualizada con éxito.']);
     }
@@ -67,12 +72,25 @@ class NotaController {
      * 
      * @return una cadena codificada en JSON que contiene el estado y el mensaje de la operación.
      */
-    public function eliminar($idNota) {
+    public function eliminar($idNota)
+    {
         $this->notaModel->borrarNota($idNota);
         return json_encode(['status' => 'success', 'message' => 'Nota eliminada con éxito.']);
     }
 
-    private function validarDatosNota($datosNota) {
-        return true;// Agregar la logica de aca
+    private function validarDatosNota($datosNota)
+    {
+        // Verificamos que los datos de la nota no estén vacíos.
+        if (empty($datosNota['titulo']) || empty($datosNota['contenido'])) {
+            return false;
+        }
+
+        // Verificamos que el título y el contenido cumplan con la longitud mínima y máxima definida.
+        if (strlen($datosNota['titulo']) < 3 || strlen($datosNota['titulo']) > 100 || strlen($datosNota['contenido']) < 10) {
+            return false;
+        }
+
+        // Si todas las validaciones pasan, retornamos verdadero.
+        return true;
     }
 }
