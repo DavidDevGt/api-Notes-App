@@ -16,6 +16,13 @@ class ComposerStaticInit48318ab36a580be9e1c12fea86d56383
         array (
             'PhpParser\\' => 10,
         ),
+        'M' => 
+        array (
+            'MiProyecto\\Utils\\' => 17,
+            'MiProyecto\\Models\\' => 18,
+            'MiProyecto\\Middleware\\' => 22,
+            'MiProyecto\\Controllers\\' => 23,
+        ),
         'D' => 
         array (
             'DeepCopy\\' => 9,
@@ -26,6 +33,22 @@ class ComposerStaticInit48318ab36a580be9e1c12fea86d56383
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'MiProyecto\\Utils\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/utils',
+        ),
+        'MiProyecto\\Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/models',
+        ),
+        'MiProyecto\\Middleware\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/middleware',
+        ),
+        'MiProyecto\\Controllers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/controllers',
         ),
         'DeepCopy\\' => 
         array (
