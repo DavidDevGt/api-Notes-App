@@ -5,10 +5,18 @@ class UsuarioController
 {
     private $usuarioModel;
 
-    public function __construct()
+    // Esta se usa para testing
+    public function __construct($usuarioModel = null)
     {
-        $this->usuarioModel = new Usuario();
+        $this->usuarioModel = $usuarioModel ?? new Usuario();
     }
+
+    // Descomentar para producción
+    
+    // public function __construct()
+    // {
+    //     $this->usuarioModel = new Usuario();
+    // }
 
 
     /**
