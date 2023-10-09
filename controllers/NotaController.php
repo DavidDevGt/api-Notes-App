@@ -1,14 +1,24 @@
 <?php
-require_once('../models/Nota.php');
+namespace MiProyecto\Controllers;
+
+use MiProyecto\Models\Nota;
 
 class NotaController
 {
     private $notaModel;
 
-    public function __construct()
+    // Esta se usa para testing
+    public function __construct($notaModel = null)
     {
-        $this->notaModel = new Nota();
+        $this->notaModel = $notaModel ?? new Nota();
     }
+
+    // Descomentar para producción
+
+    // public function __construct()
+    // {
+    //     $this->notaModel = new Nota();
+    // }
 
     /**
      * La función crea una nueva nota con un título, contenido e ID de usuario determinados y devuelve

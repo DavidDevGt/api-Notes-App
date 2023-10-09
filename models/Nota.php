@@ -1,19 +1,39 @@
 <?php
-require_once('../config/db.php');
+namespace MiProyecto\Models;
 
 class Nota
 {
     private $conexion;
 
-    public function __construct()
-    {
-        $this->conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        if ($this->conexion->connect_error) {
-            die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
-        }
+    // Esta se usa para testing
 
-        $this->conexion->set_charset("utf8");
+    public function __construct($conexion = null)
+    {
+        // Si no se proporciona una conexión, se crea una (para producción)
+        if($conexion === null) {
+            require_once(__DIR__ . '/../config/db.php');
+            $this->conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+            if ($this->conexion->connect_error) {
+                die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
+            }
+            $this->conexion->set_charset("utf8");
+        } else {
+            // Si se proporciona una conexión, la usamos (para testing)
+            $this->conexion = $conexion;
+        }
     }
+
+    // Descomentar para produccion
+
+    // public function __construct()
+    // {
+    //     $this->conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    //     if ($this->conexion->connect_error) {
+    //         die("Error al conectar a la base de datos: " . $this->conexion->connect_error);
+    //     }
+
+    //     $this->conexion->set_charset("utf8");
+    // }
 
     public function __destruct()
     {
@@ -24,7 +44,7 @@ class Nota
     /**
      * La función `crearNuevaNota` inserta una nueva nota en la base de datos con el título, contenido
      * e ID de usuario dados.
-     * 
+     *
      * @param titulo El parámetro "titulo" representa el título de la nota.
      * @param contenido El parámetro "contenido" representa el contenido o cuerpo de la nota que deseas
      * crear. Es el texto o información que deseas almacenar en la tabla de "notas".
@@ -41,11 +61,11 @@ class Nota
     /**
      * La función "leerNota" recupera una nota de la base de datos según su ID y devuelve el resultado
      * como una matriz asociativa.
-     * 
+     *
      * @param idNota El parámetro "idNota" es el identificador único de la nota que desea recuperar de
      * la base de datos. Se utiliza en la consulta SQL para filtrar los resultados y recuperar la nota
      * con el valor idNota coincidente.
-     * 
+     *
      * @return contiene los datos de la nota con la identificación
      * especificada. Si no hay resultados, devolverá NULL.
      */
@@ -63,7 +83,7 @@ class Nota
 
     /**
      * La función "actualizarNota" actualiza el título y contenido de una nota en una base de datos.
-     * 
+     *
      * @param idNota La identificación de la nota que necesita ser actualizada.
      * @param nuevoTitulo El parámetro "nuevoTitulo" es el nuevo título que deseas actualizar para la
      * nota.
@@ -81,7 +101,7 @@ class Nota
     /**
      * La función "borrarNota" actualiza la columna "activo" de la tabla "notas" a 0 para una "idNota"
      * determinada.
-     * 
+     *
      * @param idNota El parámetro "idNota" es el ID de la nota que desea eliminar.
      */
     public function borrarNota($idNota)
@@ -95,10 +115,10 @@ class Nota
     /**
      * La función "obtenerNotasPorUsuario" recupera todas las notas activas de un usuario específico
      * desde la base de datos y devuelve los resultados como una matriz de matrices asociativas.
-     * 
+     *
      * @param idUsuario El parámetro "idUsuario" es el ID del usuario cuyas notas queremos recuperar
      * de la base de datos.
-     * 
+     *
      * @return una matriz de matrices asociativas que contiene los datos de todas las notas del usuario
      * especificado que están marcadas como activas.
      */
@@ -116,9 +136,9 @@ class Nota
     /**
      * La función "obtenerNotaPorTitulo" busca en la base de datos una nota con un título específico
      * y devuelve los resultados como una matriz asociativa.
-     * 
+     *
      * @param titulo El parámetro "titulo" es el título de la nota que queremos buscar en la base de datos.
-     * 
+     *
      * @return una matriz asociativa que contiene los datos de la nota con el título especificado. Si no
      * hay resultados, devolverá NULL.
      */
