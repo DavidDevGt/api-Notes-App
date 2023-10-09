@@ -4,10 +4,12 @@
     },
     "autoload": {
         "psr-4": {
+            "MiProyecto\\": "src/",
             "MiProyecto\\Controllers\\": "controllers/",
             "MiProyecto\\Models\\": "models/",
             "MiProyecto\\Middleware\\": "middleware/",
-            "MiProyecto\\Utils\\": "utils/"
+            "MiProyecto\\Utils\\": "utils/",
+            "MiProyecto\\Tests\\": "tests/"
         }
     }
 }
